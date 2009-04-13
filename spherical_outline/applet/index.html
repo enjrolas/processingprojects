@@ -1,0 +1,876 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+	        <!-- charset must remain utf-8 to be handled properly by Processing -->
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		
+		<title>spherical_outline : Built with Processing</title>
+		
+		<style type="text/css">
+		/* <![CDATA[ */
+	
+		body {
+  		  margin: 60px 0px 0px 55px;
+		  font-family: verdana, geneva, arial, helvetica, sans-serif; 
+		  font-size: 11px; 
+		  background-color: #ddddcc; 
+		  text-decoration: none; 
+		  font-weight: normal; 
+		  line-height: normal; 
+		}
+		 
+		a          { color: #3399cc; }
+		a:link     { color: #3399cc; text-decoration: underline; }
+		a:visited  { color: #3399cc; text-decoration: underline; }
+		a:active   { color: #3399cc; text-decoration: underline; }
+		a:hover    { color: #3399cc; text-decoration: underline; }
+	
+		/* ]]> */
+		</style>
+	 
+	</head>
+	<body>
+		<div id="content">
+			<div id="spherical_outline_container">
+			
+			<!--[if !IE]> -->
+				<object classid="java:spherical_outline.class" 
+            			type="application/x-java-applet"
+            			archive="spherical_outline.jar"
+            			width="1200" height="700"
+            			standby="Loading Processing software..." >
+            			
+					<param name="archive" value="spherical_outline.jar" />
+				
+					<param name="mayscript" value="true" />
+					<param name="scriptable" value="true" />
+				
+					<param name="image" value="loading.gif" />
+					<param name="boxmessage" value="Loading Processing software..." />
+					<param name="boxbgcolor" value="#FFFFFF" />
+				
+					<param name="test_string" value="outer" />
+			<!--<![endif]-->
+				
+				<object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" 
+						codebase="http://java.sun.com/update/1.4.2/jinstall-1_4_2_12-windows-i586.cab"
+						width="1200" height="700"
+						standby="Loading Processing software..."  >
+						
+					<param name="code" value="spherical_outline" />
+					<param name="archive" value="spherical_outline.jar" />
+					
+					<param name="mayscript" value="true" />
+					<param name="scriptable" value="true" />
+					
+					<param name="image" value="loading.gif" />
+					<param name="boxmessage" value="Loading Processing software..." />
+					<param name="boxbgcolor" value="#FFFFFF" />
+					
+					<param name="test_string" value="inner" />
+					
+					<p>
+						<strong>
+							This browser does not have a Java Plug-in.
+							<br />
+							<a href="http://java.sun.com/products/plugin/downloads/index.html" title="Download Java Plug-in">
+								Get the latest Java Plug-in here.
+							</a>
+						</strong>
+					</p>
+				
+				</object>
+				
+			<!--[if !IE]> -->
+				</object>
+			<!--<![endif]-->
+			
+			</div>
+			
+			<p>
+			
+Data Type for manipulating the Processing viewport. There are
+
+several ways to create a Camera, but all cameras are manipulated
+
+the same way. The default camera position sits on the positive
+
+z-axis. The default target position is at the world origin. The
+
+default up direction is in the negative y. The default
+
+field-of-view is PI/3 radians. The default aspect ratio is the
+
+ratio of the applet width to the applet height. The default near 
+
+clipping plane is placed a 1/10 x shot length. The default far
+
+clipping plane is placed at 10x the shot length.
+
+
+
+@author  Kristian Linn Damkjer
+
+@version OCD 1.0
+
+@version Processing 0087
+
+@since   OCD 1.0
+
+@since   Processing 0087
+
+
+private float azimuth,
+
+elevation,
+
+roll;
+
+
+
+
+private float cameraX, cameraY, cameraZ,        // Camera Position
+
+targetX, targetY, targetZ,        // Target Position
+
+upX,     upY,     upZ,            // Up Vector
+
+fov, aspect, nearClip, farClip;   // Field of View, Aspect Ratio, Clip Planes
+
+
+
+
+private float shotLength;
+
+
+
+
+private float dx, dy, dz;
+
+
+
+
+
+//--- Constructors --------
+
+
+
+/** 
+
+Create a camera that sits on the z axis
+
+
+Create a camera that sits on the z axis
+
+
+public OCDCamera(PApplet parent, float shotLength) {
+
+this(parent, 0, 0, shotLength);
+
+}
+
+
+
+
+public OCDCamera(PApplet parent, float cameraX, float cameraY, float cameraZ) {
+
+this(parent, cameraX, cameraY, cameraZ, 0, 0, 0);
+
+}
+
+
+
+// OK, I fancy myself a Director. Step aside.
+
+public OCDCamera(PApplet parent,
+
+float cameraX, float cameraY, float cameraZ,
+
+float targetX, float targetY, float targetZ) {
+
+this(parent,
+
+cameraX, cameraY, cameraZ,
+
+targetX, targetY, targetZ,
+
+0,       1,       0,
+
+(PI / 3), 1f * parent.width / parent.height, 0, 0);
+
+nearClip = shotLength / 10;
+
+farClip = shotLength * 10;
+
+}
+
+
+
+// I mean it! Give me the controls already!
+
+public OCDCamera(PApplet parent,
+
+float cameraX, float cameraY, float cameraZ,
+
+float targetX, float targetY, float targetZ,
+
+float upX,     float upY,     float upZ,
+
+float fov, float aspect, float nearClip, float farClip) {
+
+this.parent = parent;
+
+this.cameraX = cameraX;
+
+this.cameraY = cameraY;
+
+this.cameraZ = cameraZ;
+
+this.targetX = targetX;
+
+this.targetY = targetY;
+
+this.targetZ = targetZ;
+
+this.upX = upX;
+
+this.upY = upY;
+
+this.upZ = upZ;
+
+this.fov = fov;
+
+this.aspect = aspect;
+
+this.nearClip = nearClip;
+
+this.farClip = farClip;
+
+
+
+dx = cameraX - targetX;
+
+dy = cameraY - targetY;
+
+dz = cameraZ - targetZ;
+
+
+
+shotLength = sqrt(dx * dx + dy * dy + dz * dz);
+
+azimuth    = atan2(dx, dz);
+
+elevation  = atan2(dy, sqrt(dz * dz + dx * dx));
+
+
+
+if (elevation > HALF_PI - TOL) {
+
+this.upY =  0;
+
+this.upZ = -1;
+
+}
+
+
+
+if (elevation < TOL - HALF_PI) {
+
+this.upY =  0;
+
+this.upZ =  1;
+
+}
+
+}
+
+
+
+//--- Behaviors ----------
+
+
+
+
+public void feed() {
+
+parent.perspective(fov, aspect, nearClip, farClip);
+
+parent.camera(cameraX, cameraY, cameraZ,
+
+targetX, targetY, targetZ,
+
+upX,     upY,     upZ);
+
+}
+
+
+
+
+public void aim(float targetX, float targetY, float targetZ) {
+
+
+
+// Move the target
+
+this.targetX = targetX;
+
+this.targetY = targetY;
+
+this.targetZ = targetZ;
+
+
+
+// Describe the new vector between the camera and the target
+
+dx = cameraX - targetX;
+
+dy = cameraY - targetY;
+
+dz = cameraZ - targetZ;
+
+
+
+// Describe the new azimuth and elevation for the camera
+
+shotLength = sqrt(dx * dx + dy * dy + dz * dz);
+
+azimuth    = atan2(dx, dz);
+
+elevation  = constrain(atan2(dy, sqrt(dz * dz + dx * dx)), TOL-HALF_PI, HALF_PI-TOL);
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void jump(float positionX, float positionY, float positionZ) {
+
+
+
+// Move the camera
+
+this.cameraX = positionX;
+
+this.cameraY = positionY;
+
+this.cameraZ = positionZ;
+
+
+
+// Describe the new vector between the camera and the target
+
+dx = cameraX - targetX;
+
+dy = cameraY - targetY;
+
+dz = cameraZ - targetZ;
+
+
+
+// Describe the new azimuth and elevation for the camera
+
+shotLength = sqrt(dx * dx + dy * dy + dz * dz);
+
+azimuth    = atan2(dx, dz);
+
+elevation  = constrain(atan2(dy, sqrt(dz * dz + dx * dx)), TOL-HALF_PI, HALF_PI-TOL);
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void zoom(float amount) {
+
+fov = constrain(fov + amount, TOL, PI - TOL);
+
+}
+
+
+
+
+public void truck(float amount) {
+
+
+
+// Calculate the camera's "X" vector
+
+float cXx = dy * upZ - dz * upY;
+
+float cXy = dx * upZ - dz * upX;
+
+float cXz = dx * upY - dy * upX;
+
+
+
+// Normalize the "X" vector so that it can be scaled
+
+float magnitude = sqrt(cXx * cXx + cXy * cXy + cXz * cXz);
+
+magnitude = (magnitude < TOL) ? 1 : magnitude;
+
+cXx /= magnitude;
+
+cXy /= magnitude;
+
+cXz /= magnitude;
+
+
+
+// Perform the truck, if any
+
+cameraX -= amount * cXx;
+
+cameraY -= amount * cXy;
+
+cameraZ -= amount * cXz;
+
+targetX -= amount * cXx;
+
+targetY -= amount * cXy;
+
+targetZ -= amount * cXz;
+
+}
+
+
+
+
+public void boom(float amount) {
+
+// Perform the boom
+
+cameraX += amount * upX;
+
+cameraY += amount * upY;
+
+cameraZ += amount * upZ;
+
+targetX += amount * upX;
+
+targetY += amount * upY;
+
+targetZ += amount * upZ;
+
+}
+
+
+
+
+public void dolly(float amount) {
+
+float dirX = dx / shotLength;
+
+float dirY = dy / shotLength;
+
+float dirZ = dz / shotLength;
+
+
+
+cameraX += amount * dirX;
+
+cameraY += amount * dirY;
+
+cameraZ += amount * dirZ;
+
+targetX += amount * dirX;
+
+targetY += amount * dirY;
+
+targetZ += amount * dirZ;
+
+}
+
+
+
+
+public void tilt(float elevationOffset) {
+
+
+
+// Calculate the new elevation for the camera
+
+elevation = constrain(elevation - elevationOffset, TOL-HALF_PI, HALF_PI-TOL);
+
+
+
+// Orbit to the new azimuth and elevation while maintaining the shot distance
+
+targetX = cameraX - ( shotLength * sin(HALF_PI + elevation) * sin(azimuth));
+
+targetY = cameraY - (-shotLength * cos(HALF_PI + elevation));
+
+targetZ = cameraZ - ( shotLength * sin(HALF_PI + elevation) * cos(azimuth));
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void pan(float azimuthOffset) {
+
+
+
+// Calculate the new azimuth for the camera
+
+azimuth = (azimuth - azimuthOffset + TWO_PI) % TWO_PI;
+
+
+
+// Orbit to the new azimuth and elevation while maintaining the shot distance
+
+targetX = cameraX - ( shotLength * sin(HALF_PI + elevation) * sin(azimuth));
+
+targetY = cameraY - (-shotLength * cos(HALF_PI + elevation));
+
+targetZ = cameraZ - ( shotLength * sin(HALF_PI + elevation) * cos(azimuth));
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+/** Rotates the camera about its Z axis
+
+NOTE: rolls will NOT affect the azimuth, but WILL affect plans, trucks, and booms
+
+
+NOTE: rolls will NOT affect the azimuth, but WILL affect plans, trucks, and booms
+
+
+public void arc(float elevationOffset) {
+
+
+
+// Calculate the new elevation for the camera
+
+elevation = constrain(elevation + elevationOffset, TOL-HALF_PI, HALF_PI-TOL);
+
+
+
+// Orbit to the new azimuth and elevation while maintaining the shot distance
+
+cameraX = targetX + ( shotLength * sin(HALF_PI + elevation) * sin(azimuth));
+
+cameraY = targetY + (-shotLength * cos(HALF_PI + elevation));
+
+cameraZ = targetZ + ( shotLength * sin(HALF_PI + elevation) * cos(azimuth));
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void circle(float azimuthOffset) {
+
+
+
+// Calculate the new azimuth for the camera
+
+azimuth = (azimuth + azimuthOffset + TWO_PI) % TWO_PI;
+
+
+
+// Orbit to the new azimuth and elevation while maintaining the shot distance
+
+cameraX = targetX + ( shotLength * sin(HALF_PI + elevation) * sin(azimuth));
+
+cameraY = targetY + (-shotLength * cos(HALF_PI + elevation));
+
+cameraZ = targetZ + ( shotLength * sin(HALF_PI + elevation) * cos(azimuth));
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void tumble(float azimuthOffset, float elevationOffset) {
+
+
+
+// Calculate the new azimuth and elevation for the camera
+
+azimuth = (azimuth + azimuthOffset + TWO_PI) % TWO_PI;
+
+elevation = constrain(elevation + elevationOffset, TOL-HALF_PI, HALF_PI-TOL);
+
+
+
+// Orbit to the new azimuth and elevation while maintaining the shot distance
+
+cameraX = targetX + ( shotLength * sin(HALF_PI + elevation) * sin(azimuth));
+
+cameraY = targetY + (-shotLength * cos(HALF_PI + elevation));
+
+cameraZ = targetZ + ( shotLength * sin(HALF_PI + elevation) * cos(azimuth));
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void look(float azimuthOffset, float elevationOffset) {
+
+
+
+// Calculate the new azimuth and elevation for the camera
+
+elevation = constrain(elevation - elevationOffset, TOL-HALF_PI, HALF_PI-TOL);
+
+azimuth = (azimuth - azimuthOffset + TWO_PI) % TWO_PI;
+
+
+
+// Orbit to the new azimuth and elevation while maintaining the shot distance
+
+targetX = cameraX - ( shotLength * sin(HALF_PI + elevation) * sin(azimuth));
+
+targetY = cameraY - (-shotLength * cos(HALF_PI + elevation));
+
+targetZ = cameraZ - ( shotLength * sin(HALF_PI + elevation) * cos(azimuth));
+
+
+
+// update the up vector
+
+updateUp();
+
+}
+
+
+
+
+public void track(float xOffset, float yOffset) {
+
+// Perform the truck, if any
+
+truck(xOffset);
+
+
+
+// Perform the boom, if any
+
+boom(yOffset);
+
+}
+
+
+
+//---- Helpers -------------------------------------------------------------
+
+
+private void updateUp() {
+
+
+
+// Describe the new vector between the camera and the target
+
+dx = cameraX - targetX;
+
+dy = cameraY - targetY;
+
+dz = cameraZ - targetZ;
+
+
+
+// Calculate the new "up" vector for the camera
+
+upX = -dx * dy;
+
+upY =  dz * dz + dx * dx;
+
+upZ = -dz * dy;
+
+
+
+// Normalize the "up" vector
+
+float magnitude = sqrt(upX * upX + upY * upY + upZ * upZ);
+
+magnitude = (magnitude < TOL) ? 1 : magnitude;
+
+upX /= magnitude;
+
+upY /= magnitude;
+
+upZ /= magnitude;
+
+
+
+// Calculate the roll if there is one
+
+if (roll != 0) {
+
+
+
+// Calculate the camera's "X" vector
+
+float cXx = dy * upZ - dz * upY;
+
+float cXy = dx * upZ - dz * upX;
+
+float cXz = dx * upY - dy * upX;
+
+
+
+// Normalize the "X" vector so that it can be scaled
+
+magnitude = sqrt(cXx * cXx + cXy * cXy + cXz * cXz);
+
+magnitude = (magnitude < 0.001) ? 1 : magnitude;
+
+cXx /= magnitude;
+
+cXy /= magnitude;
+
+cXz /= magnitude;
+
+
+
+// Perform the roll
+
+cXx *= sin(roll);        
+
+cXy *= sin(roll);        
+
+cXz *= sin(roll);        
+
+upX *= cos(roll);
+
+upY *= cos(roll);
+
+upZ *= cos(roll);
+
+upX += cXx;
+
+upY += cXy;
+
+upZ += cXz;
+
+}
+
+}
+
+
+
+//--- Simple Hacks ----------
+
+private final float radians(float a) {
+
+return parent.radians(a);
+
+}
+
+
+
+private final float sin(float a) {
+
+return parent.sin(a);
+
+}
+
+
+
+private final float cos(float a) {
+
+return parent.cos(a);
+
+}
+
+
+
+private final float tan(float a) {
+
+return parent.tan(a);
+
+}
+
+
+
+private final float sqrt(float a) {
+
+return parent.sqrt(a);
+
+}
+
+
+
+private final float atan2(float y, float x) {
+
+return parent.atan2(y, x);
+
+}
+
+
+
+private final float degrees(float a) {
+
+return parent.degrees(a);
+
+}
+
+
+
+private final float constrain(float v, float l, float u) {
+
+return parent.constrain(v, l, u);
+
+}
+
+}
+
+
+			</p>
+			
+			<p>
+			Source code: <a href="spherical_outline.pde">spherical_outline</a> 
+			</p>
+			
+			<p>
+			Built with <a href="http://processing.org" title="Processing.org">Processing</a>
+			</p>
+		</div>
+	</body>
+</html>

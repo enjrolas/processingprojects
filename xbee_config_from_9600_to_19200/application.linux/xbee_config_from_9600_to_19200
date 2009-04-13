@@ -1,0 +1,4 @@
+#!/bin/sh
+
+APPDIR=$(dirname "$0")
+java  -Djava.library.path="$APPDIR" -cp "$APPDIR/lib/xbee_config_from_9600_to_19200.jar:$APPDIR/lib/core.jar:$APPDIR/lib/serial.jar:$APPDIR/lib/RXTXcomm.jar" xbee_config_from_9600_to_19200

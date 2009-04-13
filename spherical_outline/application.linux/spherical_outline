@@ -1,0 +1,4 @@
+#!/bin/sh
+
+APPDIR=$(dirname "$0")
+java  -Djava.library.path="$APPDIR" -cp "$APPDIR/lib/spherical_outline.jar:$APPDIR/lib/core.jar:$APPDIR/lib/opengl.jar:$APPDIR/lib/jogl.jar:$APPDIR/lib/gluegen-rt.jar" spherical_outline
