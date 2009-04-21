@@ -5,17 +5,20 @@
       ratio="1.5"
       skinColor="yellow"
       >
-  </head>
+    <position <!-- how the head's positioned relative to the body -->
+	type="relative"
+	
   <eye
       color="brown"
       size="small"
-      ratio=".5"
-      location=".25"
-      >
+      ratio=".5" <!-- the height/width ratio of the eyes-->
+      location=".25"><!--the location of the eyeline from the center of the head, in fractions of head radius  -->
   </eye>
+
+  </head>
   <hair
-      color="blond"
-      style="bowl"
+      color="black"
+      style="balding"
       >
   </hair>
 </character>

@@ -1,0 +1,22 @@
+<panel>
+  <characters>
+    <janet
+	size="300">
+      <lookingAt
+	  type="person"
+	  target="george">
+      </lookingAt>
+      <position
+	  type="exact"
+	  x="200"
+	  y="700">
+      </position>
+      <dialog
+	  text="hello, world">
+      </dialog>
+    </janet>
+  </characters>
+  <setting
+      background="black">
+  </setting>
+</panel>
