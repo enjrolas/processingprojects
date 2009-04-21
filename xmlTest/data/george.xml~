@@ -1,0 +1,20 @@
+<character
+    name="janet"
+    size="average">
+  <head
+      ratio=".75"
+      skinColor="tan"
+      >
+  </head>
+  <eye
+      color="blue"
+      size="average"
+      ratio="1"
+      >
+  </eye>
+  <hair
+      color="blond"
+      style="bowl"
+      >
+  </hair>
+</character>

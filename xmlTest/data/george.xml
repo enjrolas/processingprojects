@@ -1,0 +1,21 @@
+<character
+    name="george"
+    size="average">
+  <head
+      ratio="1.5"
+      skinColor="yellow"
+      >
+  </head>
+  <eye
+      color="brown"
+      size="small"
+      ratio=".5"
+      location=".25"
+      >
+  </eye>
+  <hair
+      color="blond"
+      style="bowl"
+      >
+  </hair>
+</character>
